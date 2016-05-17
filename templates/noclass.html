@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SASSClassPass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/style.css" rel="stylesheet" media="screen">
+  </head>
+
+
+<div class=page> <br>
+  <h3> {{venue_name}} is not offering classes next week. </h3><br>
+
+    <form id='look_at_cart' method='get' action='cart' > 
+        <input type='submit' value='Look at cart' />
+    </form>
+    <form id='return_to_index' method='get' action='/' > 
+        <input type='submit' value='Go back to studio list' />
+    </form><br><br>
+    <p>Click <a href="/logout">here</a> to logout.</p>
+    {% for message in get_flashed_messages() %}
+      {{ message }}
+    {% endfor %}
+</div>

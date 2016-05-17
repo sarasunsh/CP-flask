@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SASSClassPass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/style.css" rel="stylesheet" media="screen">
+  </head>
+
+<h1> Your cart </h1> <br>
+    	<h3> Contents of your cart: </h3> <br>
+        <form id='remove_class' method='post' action='cart' >
+          <p>
+            {% for class in cart_contents %}
+              <input type='radio' name='remove_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} <br />  
+            {% endfor %}  
+          </p> <br>
+          <p>
+            <input type='submit' value='Remove class from cart' />
+          </p>
+        </form>    		
+
+
+  <form id='return_to_index' method='get' action='/' > 
+      <input type='submit' value='Go back to studio list' />
+  </form> 
+
+  <form id='initiate_signup' method='get' action='/signup' > 
+      <input type='submit' value='Sign-up for classes' />
+  </form>
+
+<br>
+<p>Click <a href="/logout">here</a> to log out.</p>

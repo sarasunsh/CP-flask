@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SASSClassPass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/style.css" rel="stylesheet" media="screen">
+  </head>
+
+<h1> Time to sign up for classes! </h1>
+    	<h3> Contents of your cart: </h3> <br>
+    		<h4>
+		      {% for class in cart_contents %}
+		        {{ class[1] }} {{class[3]}} - {{class[4]}} <br>
+		      {% endfor %}  
+	        </h4>
+
+
+<br>
+<p>Click <a href="/logout">here</a> to log out.</p>

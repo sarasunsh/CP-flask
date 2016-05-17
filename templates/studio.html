@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SASSClassPass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/style.css" rel="stylesheet" media="screen">
+  </head>
+
+
+<div class=page>
+  <h1> {{venue_name}} </h1>
+  <div class=metanav>
+    <h3> The following classes are offered on {{ class_deets[0][-2]}}: </h3>
+      <form id='class_selection' method='post' action='studio' >
+        <p>
+          {% for class in class_deets %}
+            <input type='radio' name='selected_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} <br />  
+          {% endfor %}  
+        </p>
+        <p>
+          <input type='submit' value='Add selections to cart' />
+        </p>
+      </form>
+      <form id='look_at_cart' method='get' action='cart' > 
+          <input type='submit' value='Look at cart' />
+      </form>
+      <form id='return_to_index' method='get' action='/' > 
+          <input type='submit' value='Go back to studio list' />
+      </form><br><br>
+      <p>Click <a href="/logout">here</a> to logout.</p>
+      {% for message in get_flashed_messages() %}
+        {{ message }}
+      {% endfor %}
+    </h4>
+  </div>
+</div>
