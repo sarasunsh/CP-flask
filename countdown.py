@@ -60,7 +60,7 @@ def get_ntpdelta():
             
     return delta
 
-    def date_back(dt, ntp_delta, from_date=None, precise=False):
+def date_back(dt, ntp_delta, from_date=None, precise=False):
     """
     Provides a human readable format for a timedelta
 
