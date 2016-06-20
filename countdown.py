@@ -39,8 +39,28 @@ def _mkdatetime(datestr):
     except ValueError:
         raise ArgumentTypeError(datestr + ' is not a proper date string')
 
+def get_ntpdelta():
 
-def date_back(dt, from_date=None, precise=False):
+    c = ntplib.NTPClient()     
+    tries = 0
+    response = None
+
+    while not response and tries <= 3:
+        tries += 1
+        try:
+            response, local = c.request(TIME_SERVER), datetime.now()
+            delta = local - datetime.fromtimestamp(response.tx_time) 
+        except Exception:
+            print("Error with the time server...")
+    
+    if response is None:
+        print("Unable to communicate with time server...")
+        response1, response2 = datetime.now(), datetime.now()
+        delta = response1 - response2
+            
+    return delta
+
+    def date_back(dt, ntp_delta, from_date=None, precise=False):
     """
     Provides a human readable format for a timedelta
 
@@ -53,23 +73,8 @@ def date_back(dt, from_date=None, precise=False):
     @return: str, timedelta as human readable string
     """
     if not from_date:
-       from_date = datetime.now()
-        # c = ntplib.NTPClient()
-         
-        # tries = 0
-        # response = None
-        # while not response and tries <= 3:
-        #     tries += 1
-        #     try:
-        #         response = c.request(TIME_SERVER)
-        #     except Exception:
-        #         print("Error with the time server...")
-        
-        # if response is None:
-        #     raise Exception("Fatal error communicating with the time server")
-                
-        # from_date = datetime.fromtimestamp(response.tx_time)
-
+       from_date = datetime.now() - ntp_delta 
+       
     if dt < from_date:
         return None
     elif dt == from_date:
@@ -120,7 +125,8 @@ def countdown(dt, subject=None):
         counting down to
     """
 
-    delta_str = date_back(dt)
+    ntp_delta = get_ntpdelta()
+    delta_str = date_back(dt, ntp_delta)
     while delta_str:
         sys.stdout.flush()
         delta_str = date_back(dt)
