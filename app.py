@@ -3,7 +3,7 @@ from functools import wraps
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 
 # Local Package Imports
-from models import studio_soupify, fave_soupify, sign_up, clean_class
+from models import studio_soupify, fave_soupify, sign_up, clean_class, check_upcoming
 
 # create the application object
 app = Flask(__name__)
@@ -68,7 +68,6 @@ def studio_sched():
 @login_required
 def look_cart():
 	if request.method == 'GET':
-		print session['classes_in_cart']
 		return render_template(
 			'cart.html', 
 			active_class=session['active_class'], 
@@ -80,8 +79,6 @@ def look_cart():
 			if workout[2] == classy[2]:
 				break
 		session['classes_in_cart'].pop(i)
-
-		# session['classes_in_cart'].remove(request.form['remove_class'])
 		return redirect(url_for('look_cart'))
 
 @app.route('/noclass')
@@ -96,8 +93,14 @@ def signup():
 		return render_template('signup.html', cart_contents=session['classes_in_cart'])
 	else:
 		sign_up(session['classes_in_cart'])
+		session['reserved'] = check_upcoming(session['classes_in_cart'])
 		session['classes_in_cart'] = []
-		return redirect(url_for('index'))
+		return redirect(url_for('check'))
+
+@app.route('/done')
+@login_required
+def check():
+	return render_template('done.html', reserved_classes=session['reserved'])
 
 # route for handling the login page logic
 # note, GET is the default method for routes in flask http://flask.pocoo.org/docs/0.10/quickstart/#http-methods
