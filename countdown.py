@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May 19 11:55:23 2015
 
-@author: SSunshine
-"""
 #!/usr/bin/env python
 """ Countdown Timer
 
@@ -17,7 +13,6 @@ from argparse import ArgumentParser
 from argparse import ArgumentTypeError
 from datetime import datetime
 from time import sleep
-#from time import ctime
 import ntplib
 
 
@@ -40,7 +35,10 @@ def _mkdatetime(datestr):
         raise ArgumentTypeError(datestr + ' is not a proper date string')
 
 def get_ntpdelta():
-
+    """
+    Checks if there is a difference between local time and NTP time 
+    @return: delta
+    """    
     c = ntplib.NTPClient()     
     tries = 0
     response = None
@@ -60,7 +58,7 @@ def get_ntpdelta():
             
     return delta
 
-def date_back(dt, ntp_delta, from_date=None, precise=False):
+def date_back(dt, ntp_delta, from_date=None):
     """
     Provides a human readable format for a timedelta
 
@@ -85,24 +83,15 @@ def date_back(dt, ntp_delta, from_date=None, precise=False):
     deltaMinutes = delta.seconds // 60
     deltaHours = delta.seconds // 3600
     deltaMinutes -= deltaHours * 60
-    deltaWeeks = delta.days    // 7
     deltaSeconds = delta.seconds - deltaMinutes * 60 - deltaHours * 3600
-    deltaDays = delta.days    - deltaWeeks * 7
-    deltaMilliSeconds = delta.microseconds // 1000
-    deltaMicroSeconds = delta.microseconds - deltaMilliSeconds * 1000
 
     valuesAndNames = [
-        (deltaWeeks, "week"),
-        (deltaDays, "day"),
         (deltaHours, "hour"),
         (deltaMinutes, "minute"),
         (deltaSeconds, "second")
     ]
-    if precise:
-        valuesAndNames.append((deltaMilliSeconds, "millisecond"))
-        valuesAndNames.append((deltaMicroSeconds, "microsecond"))
 
-    text =""
+    text = ""
     for value, name in valuesAndNames:
         if value > 0:
             text += len(text)   and ", " or ""
@@ -129,14 +118,13 @@ def countdown(dt, subject=None):
     delta_str = date_back(dt, ntp_delta)
     while delta_str:
         sys.stdout.flush()
-        delta_str = date_back(dt)
+        delta_str = date_back(dt, ntp_delta)
         message = "Time left{until}: {datetime}\r".format(
             until=" until {0}".format(subject) if subject else "",
             datetime=delta_str
         )
         sys.stdout.write(message)
         sleep(0.1)
-
 
 def main():
     """

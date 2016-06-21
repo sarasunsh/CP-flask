@@ -68,6 +68,7 @@ def studio_sched():
 @login_required
 def look_cart():
 	if request.method == 'GET':
+		print session['classes_in_cart']
 		return render_template(
 			'cart.html', 
 			active_class=session['active_class'], 
@@ -83,17 +84,20 @@ def look_cart():
 		# session['classes_in_cart'].remove(request.form['remove_class'])
 		return redirect(url_for('look_cart'))
 
-
 @app.route('/noclass')
 @login_required
 def classes_error():
 	return render_template('noclass.html', venue_name=session['venue_name'])
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET','POST'])
 @login_required
 def signup():
-	sign_up(session['classes_in_cart'])
-	return render_template('signup.html', cart_contents=session['classes_in_cart'])
+	if request.method == 'GET':
+		return render_template('signup.html', cart_contents=session['classes_in_cart'])
+	else:
+		sign_up(session['classes_in_cart'])
+		session['classes_in_cart'] = []
+		return redirect(url_for('index'))
 
 # route for handling the login page logic
 # note, GET is the default method for routes in flask http://flask.pocoo.org/docs/0.10/quickstart/#http-methods

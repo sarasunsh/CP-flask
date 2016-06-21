@@ -1,3 +1,27 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>SASSClassPass</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="static/style.css" rel="stylesheet" media="screen">
+  </head>
+
+<h1> Time to sign up for classes! </h1><br>
+    	<h3> Contents of your cart: </h3> 
+    		<h4>
+		      {% for class in cart_contents %}
+		        {{ class[1] }} {{class[3]}} - {{class[4]}} <br>
+		      {% endfor %}  
+	        </h4><br>
+
+  <form id='initiate_signup' method='post' action='/signup' > 
+      <input type='submit' value='Sign-up for classes' />
+  </form>
+<br>
+<p>Click <a href="/logout">here</a> to log out.</p>
+
+
+ -->
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,14 +30,42 @@
     <link href="static/style.css" rel="stylesheet" media="screen">
   </head>
 
-<h1> Time to sign up for classes! </h1>
-    	<h3> Contents of your cart: </h3> <br>
-    		<h4>
-		      {% for class in cart_contents %}
-		        {{ class[1] }} {{class[3]}} - {{class[4]}} <br>
-		      {% endfor %}  
-	        </h4>
+<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+</script>
 
+<body onload="startTime()">
 
+<div id="txt"></div>
+
+</body>
+
+<h1> Time to sign up for classes! </h1><br>
+      <h3> Contents of your cart: </h3> 
+        <h4>
+          {% for class in cart_contents %}
+            {{ class[1] }} {{class[3]}} - {{class[4]}} <br>
+          {% endfor %}  
+          </h4><br>
+
+  <form id='initiate_signup' method='post' action='/signup' > 
+      <input type='submit' value='Sign-up for classes' />
+  </form>
 <br>
 <p>Click <a href="/logout">here</a> to log out.</p>
+
+</html>
