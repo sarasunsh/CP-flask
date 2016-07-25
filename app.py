@@ -57,10 +57,8 @@ def studio_sched():
 	else:
 		# If the request is a POST, it means someone was trying to add a class to cart
 		# Class details come in as a string, so they need to be converted back to a list
-		final = clean_class(request.form['selected_class'])
-		# Add class to cart
-		session['classes_in_cart'].append(final)
-		session['active_class'] = final
+		for cl in request.form.getlist("selected_class"):
+			session['classes_in_cart'].append(clean_class(cl))
 
 		return redirect(url_for('look_cart'))
 
@@ -70,15 +68,16 @@ def look_cart():
 	if request.method == 'GET':
 		return render_template(
 			'cart.html', 
-			active_class=session['active_class'], 
 			cart_contents=session['classes_in_cart']
 			)
 	else:
-		classy = clean_class(request.form['remove_class'])
-		for i, workout in enumerate(session['classes_in_cart']):
-			if workout[2] == classy[2]:
-				break
-		session['classes_in_cart'].pop(i)
+		# If request is POST, user is trying to remove classes
+		for cl in request.form.getlist("remove_class"):
+			classy = clean_class(cl)
+			for i, workout in enumerate(session['classes_in_cart']):
+				if workout[2] == classy[2]:
+					break
+			session['classes_in_cart'].pop(i)
 		return redirect(url_for('look_cart'))
 
 @app.route('/noclass')

@@ -3,26 +3,26 @@
   <head>
     <title>SASSClassPass</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/style.css" rel="stylesheet" media="screen">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
 
 
 <div class=page>
-  <h1>Favorite studios!</h1>
+  <h1 class="bg-warning">Favorite studios!</h1>
   <div class=metanav>
     <h3> Select a studio: </h3>
       <form id='answerform_CP' method='post' action='/' >
-        <p>
+        <div class="col-md-3 col-md-offset-1">
           {% for studio in studio_list %}
-            <input type='radio' name='selected_studio' value={{studio}} /> {{ studio }} <br />
+            <input type='radio' name='selected_studio' value={{studio}} /> {{ studio }} <br/>
           {% endfor %}  
-        </p>
+        </div>
         <p>
-          <input type='submit' value='Check studio schedule' />
+          <input type='submit' class="btn btn-success" value='Check studio schedule' />
         </p>
       </form>
       <form id='look_at_cart' method='get' action='cart' > 
-          <input type='submit' value='Look at cart' />
+          <input type='submit' class="btn btn-primary btn-sm" value='Look at cart' />
       </form><br>
       <p>Click <a href="/logout">here</a> to logout.</p>
       {% for message in get_flashed_messages() %}

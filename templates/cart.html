@@ -3,30 +3,53 @@
   <head>
     <title>SASSClassPass</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/style.css" rel="stylesheet" media="screen">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
+
+<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+</script>
+
+<body onload="startTime()">
+
+<div id="txt"></div>
 
 <h1> Your cart </h1> <br>
     	<h3> Contents of your cart: </h3> <br>
         <form id='remove_class' method='post' action='cart' >
           <p>
             {% for class in cart_contents %}
-              <input type='radio' name='remove_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} <br />  
+              <label><input type='checkbox'  name='remove_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} </label><br/>    
             {% endfor %}  
-          </p> <br>
+          </p> 
           <p>
-            <input type='submit' value='Remove class from cart' />
+            <input type='submit' class="btn btn-primary btn-sm" value='Remove class from cart' />
           </p>
         </form>    		
 
 
   <form id='return_to_index' method='get' action='/' > 
-      <input type='submit' value='Go back to studio list' />
-  </form> 
+      <input type='submit' class="btn btn-info btn-sm" value='Go back to studio list' />
+  </form> <br>
 
   <form id='initiate_signup' method='get' action='/signup' > 
-      <input type='submit' value='Go to sign-up form' />
+      <input type='submit' class="btn btn-danger" value='Ready to sign up?' />
   </form>
 
 <br>
 <p>Click <a href="/logout">here</a> to log out.</p>
+</body>

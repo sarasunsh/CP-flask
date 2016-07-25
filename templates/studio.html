@@ -3,30 +3,56 @@
   <head>
     <title>SASSClassPass</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/style.css" rel="stylesheet" media="screen">
+    <link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
+
+<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+</script>
+
+<body onload="startTime()">
+  <h3 class="text-center">
+   <div id="txt"></div>
+  </h3>
 
 
 <div class=page>
-  <h1> {{venue_name}} </h1>
+  <h1 class="bg-warning"> {{venue_name}} </h1>
   <div class=metanav>
     <h3> The following classes are offered on {{ class_deets[0][-2]}}: </h3>
+    <div class="col-md-3 col-md-offset-1">
       <form id='class_selection' method='post' action='studio' >
         <p>
           {% for class in class_deets %}
-            <input type='radio' name='selected_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} <br />  
+            <label><input type='checkbox' name='selected_class' value='{{class}}' /> {{ class[1] }} {{class[3]}} - {{class[4]}} </label><br/> 
           {% endfor %}  
         </p>
         <p>
-          <input type='submit' value='Add selections to cart' />
+          <input type='submit' class="btn btn-success" value='Add selections to cart' />
         </p>
       </form>
+      <div class="col-md-3 col-md-offset-1">
       <form id='look_at_cart' method='get' action='cart' > 
-          <input type='submit' value='Look at cart' />
-      </form>
+          <input type='submit' class="btn btn-primary btn-sm" value='Look at cart' />
+      </form></div>
+      <div class="col-md-3 col-md-offset-1">
       <form id='return_to_index' method='get' action='/' > 
-          <input type='submit' value='Go back to studio list' />
-      </form><br><br>
+          <input type='submit' class="btn btn-info btn-sm" value='Return to studio list' />
+      </form></div> <br><br><br>
       <p>Click <a href="/logout">here</a> to logout.</p>
       {% for message in get_flashed_messages() %}
         {{ message }}
@@ -34,3 +60,4 @@
     </h4>
   </div>
 </div>
+</body>
