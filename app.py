@@ -5,7 +5,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 # Local Package Imports
 from models import studio_soupify, fave_soupify, sign_up, clean_class, check_upcoming
 
-# create the application object
+# Create the application object
 app = Flask(__name__)
 
 # Encryption key used to access data
@@ -30,11 +30,13 @@ def login_required(f):
 @app.route('/index', methods=['GET','POST'])
 @login_required
 def index():
+	# Once you log in, populate the studio dictionary from favorites
 	studio_dict = session['studio_dict']
+	# If request was a GET, user has just logged in and needs to see the list of favorites
 	if request.method == 'GET':
 		return render_template('index.html', studio_list=studio_dict.keys())
 	else:
-		# request was a POST
+		# Request was a POST, user has selected a studio
 		session['venue_name'] = request.form['selected_studio']
 		session['venue_id'] = studio_dict[session['venue_name']]
 		return redirect(url_for('studio_sched'))
@@ -45,7 +47,15 @@ def studio_sched():
 	if request.method == 'GET':
 		## TO DO: add a decorator that will check if studio information has already been retrieved this session-- look at fibonnaci example
 		# Feed venue_id into function to retrieve html 
-		session['class_deets'] = studio_soupify(session['venue_id'])
+		if session['venue_id'] not in session['cached_studios'].keys():
+			print 'not cached'
+			session['class_deets'] = studio_soupify(session['venue_id'])
+			session['cached_studios'][session['venue_id']] = session['class_deets']
+			print session['cached_studios']
+		else:
+			session['class_deets'] = session['cached_studios'][session['venue_id']]
+		
+
 		if len(session['class_deets']) == 0:
 			return render_template('noclass.html', venue_name=session['venue_name'])
 		else:
@@ -55,7 +65,7 @@ def studio_sched():
 				class_deets=session['class_deets']
 			)
 	else:
-		# If the request is a POST, it means someone was trying to add a class to cart
+		# If the request is a POST, it means someone was trying to add class(es) to cart
 		# Class details come in as a string, so they need to be converted back to a list
 		for cl in request.form.getlist("selected_class"):
 			session['classes_in_cart'].append(clean_class(cl))
@@ -119,6 +129,7 @@ def login():
 			flash('Login successful!')
 			session['studio_dict'] = fave_soupify()
 			session['classes_in_cart'] = []
+			session['cached_studios'] = {}
 
 			# url_for function generates an endpoint for the provided method (behind scenes)
 			return redirect(url_for('index'))
